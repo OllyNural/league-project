@@ -1,4 +1,4 @@
-package com.oliver-nural.app;
+package com.ollynural.app;
 
 /**
  * Hello world!

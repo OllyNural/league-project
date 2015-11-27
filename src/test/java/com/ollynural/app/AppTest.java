@@ -1,7 +1,7 @@
-package com.oliver-nural.app;
+package com.ollynural.app;
 
-import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.Test;
 import junit.framework.TestSuite;
 
 /**
