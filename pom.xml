@@ -3,11 +3,28 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.oliver-nural.app</groupId>
     <artifactId>league-project</artifactId>
-    <packaging>jar</packaging>
+    <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <name>league-project</name>
     <url>http://maven.apache.org</url>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.38</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
     <dependencies>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>2.9.1</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -39,5 +56,73 @@
             <artifactId>json-simple</artifactId>
             <version>1.1.1</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.tomcat.maven</groupId>
+                    <artifactId>tomcat7-maven-plugin</artifactId>
+                    <version>2.2</version>
+                    <executions>
+                        <execution>
+                            <id>tomcat-run</id>
+                            <goals>
+                                <goal>exec-war-only</goal>
+                            </goals>
+                            <phase>package</phase>
+                            <configuration>
+
+                                <!-- optional only if you want to use a preconfigured server.xml file -->
+                                <!--
+                                <serverXml>src/main/tomcatconf/server.xml</serverXml>
+                                -->
+                                <warRunDependencies>
+                                    <warRunDependency>
+                                        <dependency>
+                                            <groupId>com.oliver-nural.app</groupId>
+                                            <artifactId>league-project</artifactId>
+                                            <version>1.0-SNAPSHOT</version>
+                                            <type>war</type>
+                                        </dependency>
+                                        <contextPath>/</contextPath>
+                                    </warRunDependency>
+                                </warRunDependencies>
+                                <!-- naming is disabled by default so use true to enable it -->
+                                <enableNaming>true</enableNaming>
+                                <!-- extra dependencies to add jdbc driver, mail jars, etc. -->
+                                <extraDependencies>
+                                    <extraDependency>
+                                        <groupId>org.apache.derby</groupId>
+                                        <artifactId>derby</artifactId>
+                                        <version>10.1.3.1</version>
+                                    </extraDependency>
+                                    <extraDependency>
+                                        <groupId>javax.mail</groupId>
+                                        <artifactId>mail</artifactId>
+                                        <version>1.4</version>
+                                    </extraDependency>
+                                </extraDependencies>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <configuration>
+                        <webXml>src\main\webapp\WEB-INF\web.xml</webXml>
+                        <failOnMissingWebXml>false</failOnMissingWebXml>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
 </project>

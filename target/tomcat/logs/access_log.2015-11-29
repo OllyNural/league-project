@@ -1,0 +1,10 @@
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:17:00:23 +0000] "GET /Project/register HTTP/1.1" 404 - http-bio-8080-exec-1 0
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:17:00:49 +0000] "GET /Project/register HTTP/1.1" 404 - http-bio-8080-exec-3 0
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:17:01:09 +0000] "GET /Project/player?userName=Lazrkiller HTTP/1.1" 404 - http-bio-8080-exec-4 0
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:18:08:05 +0000] "GET /Project/register HTTP/1.1" 404 - http-bio-8080-exec-7 0
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:18:09:56 +0000] "GET /league-project/register HTTP/1.1" 404 1119 http-bio-8080-exec-10 15
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:20:23:23 +0000] "GET /league-project/register HTTP/1.1" 404 1119 http-bio-8080-exec-1 32
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:20:23:28 +0000] "GET /league-project/register HTTP/1.1" 404 1119 http-bio-8080-exec-2 1
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:22:41:04 +0000] "GET /league-project/player HTTP/1.1" 200 4052 http-bio-8080-exec-1 1811
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:22:41:04 +0000] "GET /Project/resources/js/script.js HTTP/1.1" 404 - http-bio-8080-exec-3 0
+0:0:0:0:0:0:0:1 - - [29/Nov/2015:22:41:04 +0000] "GET /Project/resources/css/stylesheet.css HTTP/1.1" 404 - http-bio-8080-exec-4 0

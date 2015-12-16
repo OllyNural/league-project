@@ -1,0 +1,92 @@
+@CHARSET "ISO-8859-1";
+body{
+	background-color: #DDDDDD ;
+	}
+.nav-logo {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	}
+.nav-text {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	}
+h1 {
+	font-family: Roboto, 'Raleway', Helvetica, Arial, sans-serif;
+	font-size: 25px;
+	line-height: 25px;
+	font-weight: bold;
+}
+a:hover{
+	text-decoration: none;
+	}
+a:link{
+	text-decoration: none;
+	color: #ced0d2;
+	}
+th, td {
+	padding:10px 10px 10px 10px;
+}
+table, th, td {
+	border: 1px solid black;
+	border-collapse: collapse;
+}
+.mainUniversityDiv {
+	border-radius:10px;
+	background-color: #ffffff;
+}
+.playerProfileDiv {
+	border-radius:10px;
+	background-color: #ffffff;
+}
+.playerGamesDiv {
+	border-radius:10px;
+	background-color: #ffffff;
+}
+.mainDiv {
+	border-radius:10px;
+	background-color: #ffffff;
+}
+.mainRegisterDiv{
+	border-radius: 10px;
+	background-color: #ffffff;
+	padding: 15px 15px 15px 15px;
+}
+.navbar-default {
+	margin-top: 10px;
+}
+.delete-button {
+	background-color: red;
+}
+th td#delete-button-column {
+	border: none;
+	margin-left: 20px;
+}
+table {
+	margin-bottom: 30px;
+}
+.summonerSearchFormMain {
+	padding-top: 10px;
+}
+.playerName {
+	color: #253196;
+	margin: 0 auto;
+	text-align: center;
+}
+.playerIcon img{
+	padding-bottom: 25px;
+}
+
+/* css for tier rankings */
+
+.diamond-tier {
+	font-weight: strong;
+	color: #4EE2EC;
+}
+
+
+
+
+
+
+
+

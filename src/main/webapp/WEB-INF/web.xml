@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee">
+  <display-name>Project</display-name>
+  <welcome-file-list>
+    <welcome-file>/WEB-INF/JSP/index.jsp</welcome-file>
+  </welcome-file-list>
+
+  <!--<servlet>-->
+    <!--<servlet-name>UniversityRanking</servlet-name>-->
+    <!--<servlet-class>org.ollynural.project.UniversityRanking</servlet-class>-->
+  <!--</servlet>-->
+  <!--<servlet-mapping>-->
+    <!--<servlet-name>UniversityRanking</servlet-name>-->
+    <!--<url-pattern>/UniversityRanking/*</url-pattern>-->
+  <!--</servlet-mapping>-->
+
+  <!--<servlet>-->
+  	<!--<servlet-name>Player</servlet-name>-->
+  	<!--<servlet-class>org.ollynural.project.Player</servlet-class>-->
+  <!--</servlet>-->
+  <!--<servlet-mapping>-->
+    <!--<servlet-name>Player</servlet-name>-->
+    <!--<url-pattern>/Player</url-pattern>-->
+  <!--</servlet-mapping>-->
+
+  <!--<servlet>-->
+    <!--<servlet-name>Register</servlet-name>-->
+    <!--<servlet-class>org.ollynural.project.Register</servlet-class>-->
+  <!--</servlet>-->
+  <!--<servlet-mapping>-->
+    <!--<servlet-name>Register</servlet-name>-->
+    <!--<url-pattern>/Register/*</url-pattern>-->
+  <!--</servlet-mapping>-->
+
+  <resource-ref>
+  	<description>Connector to LeagueSchema</description>
+  	<res-ref-name>jdbc/leaguedatabase</res-ref-name>
+  	<res-type>javax.sql.DataSource</res-type>
+  	<res-auth>Container</res-auth>
+  </resource-ref>
+
+</web-app>
