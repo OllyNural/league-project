@@ -1,5 +1,5 @@
 <html>
-<%@ include file="../common/header.jsp" %>
+{{> ../common/header}}
 <script>
 	$(document).ready( function(){
 		returnSingleSummoner('${userName}', '${id}', 'resultsTablePlayer');
@@ -24,7 +24,16 @@
 				<th>Tier</th>
 				<th>Division</th>
 				<th>League Points</th>
-				<th><%= request.getAttribute("userName") %></th>
+				<th><%= request.getAttribute("summonerName") %></th>
+			</tr>
+			<tr>
+			    <td></td>
+			    <td></td>
+			    <td>${request.summonerId}</td>
+			    <td>${request.basicInformation.${request.summonerId}.summonerLevel}</td>
+			    <td></td>
+			    <td></td>
+			    <td></td>
 			</tr>
 		</table>
 		<br>

@@ -1,13 +1,24 @@
-package com.ollynural.app.dto.leagueentrydto;
+package com.ollynural.app.dto.rankedDTO.leagueentrydto;
+
+import java.util.Arrays;
 
 /**
  * DTO to represent ranked information call from RIOT's API
  */
 public class SummonerRankedInfoDTOEntry {
 
-    private LeagueDTOEntry[] leagueDTOEntries;
+    @Override
+    public String toString() {
+        return "SummonerRankedInfoDTOEntry{" +
+                "entries=" + Arrays.toString(entries) +
+                ", name='" + name + '\'' +
+                ", queue='" + queue + '\'' +
+                ", tier='" + tier + '\'' +
+                '}';
+    }
+
+    private LeagueDTOEntry[] entries;
     private String name;
-    private String paricipantId;
     private String queue;
     private String tier;
 
@@ -27,14 +38,6 @@ public class SummonerRankedInfoDTOEntry {
         this.name = name;
     }
 
-    public String getParicipantId() {
-        return paricipantId;
-    }
-
-    public void setParicipantId(String paricipantId) {
-        this.paricipantId = paricipantId;
-    }
-
     public String getQueue() {
         return queue;
     }
@@ -43,12 +46,12 @@ public class SummonerRankedInfoDTOEntry {
         this.queue = queue;
     }
 
-    public LeagueDTOEntry[] getLeagueDTOEntries() {
-        return leagueDTOEntries;
+    public LeagueDTOEntry[] getEntries() {
+        return entries;
     }
 
-    public void setLeagueDTOEntries(LeagueDTOEntry[] leagueDTOEntries) {
-        this.leagueDTOEntries = leagueDTOEntries;
+    public void setEntries(LeagueDTOEntry[] entries) {
+        this.entries = entries;
     }
 
 

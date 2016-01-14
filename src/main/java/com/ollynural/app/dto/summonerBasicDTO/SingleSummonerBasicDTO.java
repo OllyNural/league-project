@@ -1,29 +1,27 @@
-package com.ollynural.app.dto;
+package com.ollynural.app.dto.summonerBasicDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.sql.Time;
-
 /**
- * DTO to represent basic summoner call from RIOT's API
+ * Created by Admin on 20/12/2015.
  */
-public class SummonerBasicDTO {
-    @JsonProperty("ID")
+public class SingleSummonerBasicDTO {
+    @JsonProperty("id")
     private long Id;
     @JsonProperty("name")
     private String name;
-    @JsonProperty("summonerIcon")
-    private int summonerIcon;
+    @JsonProperty("profileIconId")
+    private int profileIconId;
     @JsonProperty("revisionDate")
     private Long revisionDate;
     @JsonProperty("summonerLevel")
     private int summonerLevel;
-    @JsonProperty("update_time")
-    private Time cacheTime;
-
-    public Time getTime(){
-        return cacheTime;
-    }
+//    @JsonProperty("update_time")
+//    private Time cacheTime;
+//
+//    public Time getTime(){
+//        return cacheTime;
+//    }
 
     public void setId(long ID) {
         this.Id = ID;
@@ -41,11 +39,11 @@ public class SummonerBasicDTO {
         return name;
     }
 
-    public void setSummonerIcon(int summonerIcon) {
-        this.summonerIcon = summonerIcon;
+    public void setProfileIconId(int profileIconId) {
+        this.profileIconId = profileIconId;
     }
 
-    public int getSummonerIcon() {return summonerIcon;}
+    public int getProfileIconId() {return profileIconId;}
 
     public void setRevisionDate(long revisionDate) {
         this.revisionDate = revisionDate;
@@ -60,7 +58,8 @@ public class SummonerBasicDTO {
     public int getSummonerLevel() {return summonerLevel;}
 
     public String toString(){
-        return "" + Id + name + summonerIcon + revisionDate + summonerLevel;
+        return "id: " + Id + ", name: " + name + ", profileIconId: " + profileIconId
+                + ", revisionDate: " + revisionDate + ", summonerLevel: " + summonerLevel;
     }
 
 }

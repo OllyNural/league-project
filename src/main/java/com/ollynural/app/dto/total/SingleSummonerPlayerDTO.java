@@ -1,4 +1,8 @@
-package com.ollynural.app.dto;
+package com.ollynural.app.dto.total;
+
+import com.ollynural.app.dto.rankedDTO.SummonerRankedInfoDTO;
+import com.ollynural.app.dto.SummonerUniversityDTO;
+import com.ollynural.app.dto.summonerBasicDTO.SummonerBasicDTO;
 
 /**
  * Created by Admin on 05/12/2015.
@@ -8,6 +12,15 @@ public class SingleSummonerPlayerDTO {
     private SummonerBasicDTO summonerBasicDTO;
     private SummonerRankedInfoDTO summonerRankedInfoDTO;
     private SummonerUniversityDTO summonerUniversityDTO;
+    private boolean usernameExists;
+
+    public boolean isUsernameExists() {
+        return usernameExists;
+    }
+
+    public void setUsernameExists(boolean usernameExists) {
+        this.usernameExists = usernameExists;
+    }
 
     public SummonerBasicDTO getSummonerBasicDTO() {
         return summonerBasicDTO;

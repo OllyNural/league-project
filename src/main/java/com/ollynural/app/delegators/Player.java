@@ -1,59 +1,56 @@
 package com.ollynural.app.delegators;
 
+import com.ollynural.app.dto.total.SingleSummonerPlayerDTO;
 import com.ollynural.app.main.dao.BasicDAO;
 
-import javax.naming.NamingException;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
+import org.apache.log4j.Logger;
+
+import org.springframework.boot.autoconfigure.*;
+import org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration;
+import org.springframework.stereotype.*;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 /**
- * Servlet implementation class Player
+ * Spring Help
  */
-@WebServlet("/player")
-public class Player extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Player() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+@Controller
+public class Player {
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Working step 1");
-        handleServerResponse(request, response);
-	}
+    final static Logger logger = Logger.getLogger(Player.class);
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        handleServerResponse(request, response);
-    }
-	
-	private void handleServerResponse(HttpServletRequest request, HttpServletResponse response) {
-
+    @RequestMapping(value="/player", method = RequestMethod.GET)
+	private String handleServerResponse(@RequestParam("summonerName") String summonerName,
+                                              Model model) {
+        //ModelAndView modelAndView = new ModelAndView();
         try {
+            logger.info("START PROCESS ---------------------------");
             BasicDAO dao = new BasicDAO();
-            String summonerName = request.getParameter("summonerName");
-            System.out.println(summonerName);
-            dao.getOrRetrieveBasicAndRankedSummonerInformation(summonerName);
-
-            request.getRequestDispatcher("WEB-INF/JSP/pages/player.jsp").forward(request, response);
-            System.out.println("working step 2" + summonerName);
+            SingleSummonerPlayerDTO singleSummonerPlayerDTO = new SingleSummonerPlayerDTO();
+            try {
+                singleSummonerPlayerDTO = dao.getOrRetrieveBasicAndRankedSummonerInformation(summonerName);
+                logger.info("Successfully done stuff");
+                singleSummonerPlayerDTO.setUsernameExists(true);
+                //modelAndView = new ModelAndView("/WEB-INF/JSP/pages/player");
+                model.addAttribute("exists", singleSummonerPlayerDTO.isUsernameExists());
+                model.addAttribute("summonerId", singleSummonerPlayerDTO.getSummonerRankedInfoDTO().getID());
+                model.addAttribute("basicInformation", singleSummonerPlayerDTO.getSummonerBasicDTO());
+                model.addAttribute("rankedInformation", singleSummonerPlayerDTO.getSummonerRankedInfoDTO());
+                model.addAttribute("universityInformation", singleSummonerPlayerDTO.getSummonerUniversityDTO());
+                model.addAttribute("summonerName", summonerName);
+            } catch(RuntimeException e) {
+                logger.error("Username doesn't exist");
+                //modelAndView = new ModelAndView("error");
+                singleSummonerPlayerDTO.setUsernameExists(false);
+                model.addAttribute("exists", singleSummonerPlayerDTO.isUsernameExists());
+                model.addAttribute("data", singleSummonerPlayerDTO);
+                model.addAttribute("summonerName", summonerName);
+            }
         } catch (Exception e){
             e.printStackTrace();
         }
+        logger.info("END PROCESS -----------------------------");
+        return "playerView";
 	}
 
 }
