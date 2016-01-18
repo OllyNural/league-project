@@ -1,3 +1,4 @@
+/*
 package com.ollynural.app.delegators;
 
 import com.ollynural.app.main.dao.BasicDAO;
@@ -9,23 +10,29 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+*/
 /**
- * Servlet implementation class Player
- */
+ * Servlet implementation class Summoner
+ *//*
+
 @WebServlet("/register")
 public class Register extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    /**
+    */
+/**
      * @see HttpServlet#HttpServlet()
-     */
+     *//*
+
     public Register() {
         super();
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 */
+	*/
+/**
+	 *//*
+
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			request.getRequestDispatcher("src/WEB-INF/JSP/pages/register.jsp").forward(request, response);
@@ -35,8 +42,10 @@ public class Register extends HttpServlet {
 		}
 	}
 
-	/**
-	 */
+	*/
+/**
+	 *//*
+
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			String summonerName = request.getParameter("summonerName");
@@ -60,3 +69,4 @@ public class Register extends HttpServlet {
 	}
 
 }
+*/

@@ -2,11 +2,11 @@ c:\Users\Admin\league-project\src\main\java\com\ollynural\app\database\validator
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\main\dao\BasicDAO.java
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\database\sendtodatabase\DatabaseSender.java
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\dto\total\SingleSummonerPlayerDTO.java
+c:\Users\Admin\league-project\src\main\java\com\ollynural\app\delegators\Summoner.java
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\database\retrievedatabase\DatabaseAccessor.java
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\dto\rankedDTO\leagueentrydto\MiniSeriesDTOEntry.java
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\dto\summonerBasicDTO\SummonerBasicDTO.java
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\main\dao\MiddleManClass.java
-c:\Users\Admin\league-project\src\main\java\com\ollynural\app\delegators\Player.java
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\dto\summonerBasicDTO\SingleSummonerBasicDTO.java
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\dto\rankedDTO\leagueentrydto\SummonerRankedInfoDTOEntry.java
 c:\Users\Admin\league-project\src\main\java\com\ollynural\app\converters\utils\TimeUtils.java

@@ -1,7 +1,6 @@
 package com.ollynural.app.main.dao;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ollynural.app.converters.validation.ValidationOfUsername;
 import com.ollynural.app.database.retrievedatabase.DatabaseAccessor;
 import com.ollynural.app.database.sendtodatabase.DatabaseSender;
