@@ -9,6 +9,8 @@ import org.apache.log4j.Logger;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 
@@ -24,6 +26,7 @@ public class Summoner {
 
     @GET
     @Path("/{summonerName}")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response returnSingleSummoner(@PathParam("summonerName") String summonerName) throws Exception {
         logger.info("START PROCESS ---------------------------");
         BasicDAO dao = new BasicDAO();
