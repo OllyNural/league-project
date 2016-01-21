@@ -14,6 +14,16 @@ public class SingleSummonerPlayerDTO {
     private SummonerUniversityDTO summonerUniversityDTO;
     private boolean usernameExists;
 
+    @Override
+    public String toString() {
+        return "SingleSummonerPlayerDTO{" +
+                "summonerBasicDTO=" + summonerBasicDTO +
+                ", summonerRankedInfoDTO=" + summonerRankedInfoDTO +
+                ", summonerUniversityDTO=" + summonerUniversityDTO +
+                ", usernameExists=" + usernameExists +
+                '}';
+    }
+
     public boolean isUsernameExists() {
         return usernameExists;
     }
@@ -45,6 +55,5 @@ public class SingleSummonerPlayerDTO {
     public void setSummonerUniversityDTO(SummonerUniversityDTO summonerUniversityDTO) {
         this.summonerUniversityDTO = summonerUniversityDTO;
     }
-
 
 }

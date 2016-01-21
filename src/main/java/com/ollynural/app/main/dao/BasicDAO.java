@@ -153,4 +153,7 @@ public class BasicDAO {
 
     }
 
+    public SummonerUniversityDTO getUniversityRankingsByUniversityCode(String universityCode) {
+        // Do a search on database returning a list of all summoner id
+    }
 }

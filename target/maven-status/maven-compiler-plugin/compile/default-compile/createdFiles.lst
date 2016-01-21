@@ -6,6 +6,7 @@ com\ollynural\app\converters\validation\ValidationOfUsername.class
 com\ollynural\app\database\retrievedatabase\DatabaseAccessor.class
 com\ollynural\app\dto\summonerBasicDTO\SingleSummonerBasicDTO.class
 com\ollynural\app\dto\SummonerUniversityDTO.class
+com\ollynural\app\delegators\University.class
 com\ollynural\app\main\JsonHTTPGetters\RiotURLSender.class
 com\ollynural\app\dto\rankedDTO\leagueentrydto\LeagueDTOEntry.class
 com\ollynural\app\dto\rankedDTO\leagueentrydto\MiniSeriesDTOEntry.class
