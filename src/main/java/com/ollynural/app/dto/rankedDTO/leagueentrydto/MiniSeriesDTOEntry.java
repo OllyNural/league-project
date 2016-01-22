@@ -1,4 +1,4 @@
-package com.ollynural.app.dto.leagueentrydto;
+package com.ollynural.app.dto.rankedDTO.leagueentrydto;
 
 /**
  * Created by Admin on 15/11/2015.
@@ -9,6 +9,16 @@ public class MiniSeriesDTOEntry {
     private String progress;
     private int target;
     private int wins;
+
+    @Override
+    public String toString() {
+        return "MiniSeriesDTOEntry{" +
+                "losses=" + losses +
+                ", progress='" + progress + '\'' +
+                ", target=" + target +
+                ", wins=" + wins +
+                '}';
+    }
 
     public int getLosses() {
         return losses;

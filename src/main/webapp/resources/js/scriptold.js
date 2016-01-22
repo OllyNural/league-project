@@ -82,7 +82,29 @@ function searchSummoner(form) {
 }
 
 function returnSingleSummoner(summonerName, summonerId, divId) {
+	if(summonerId != "") {
+		console.log(summonerId);
+	}
+	var summURL = 'https://euw.api.pvp.net/api/lol/euw/v1.4/summoner/by-name/' + summonerName +'?api_key=' + APIKey;
+	var basicInfo = [];
+	$.getJSON(summURL, function(json) {
+		var summonerNameNoSpace = summonerName.replace(" ","");
 
+		summonerNameNoSpace = summonerNameNoSpace.toLowerCase().trim();
+	
+		summonerID = json[summonerNameNoSpace].id;
+		summonerLevel = json[summonerNameNoSpace].summonerLevel;
+		summonerPhoto = json[summonerNameNoSpace].profileIconId;
+	
+		basicInfo = [summonerNameNoSpace, summonerPhoto, summonerName, summonerID, summonerLevel];
+	})
+	.done(function() {
+		handleSingleSearchSummoner(basicInfo, divId)
+	})
+	.fail(function(XMLHttpRequest, textStatus, errorThrown) {
+	basicInfo = ["No account found for given name"];
+	alert('Soemthing went wrong');
+	});
 }
 
 function handleSingleSearchSummoner(basicInfo, divId) {

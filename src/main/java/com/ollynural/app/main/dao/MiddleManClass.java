@@ -1,10 +1,9 @@
 package com.ollynural.app.main.dao;
 
-import com.ollynural.app.converters.JsonToDTO;
 import com.ollynural.app.database.retrievedatabase.DatabaseAccessor;
 import com.ollynural.app.database.sendtodatabase.DatabaseSender;
-import com.ollynural.app.dto.SummonerBasicDTO;
-import com.ollynural.app.dto.SummonerRankedInfoDTO;
+import com.ollynural.app.dto.summonerBasicDTO.SummonerBasicDTO;
+import com.ollynural.app.dto.rankedDTO.SummonerRankedInfoDTO;
 import com.ollynural.app.dto.SummonerUniversityDTO;
 import com.ollynural.app.main.JsonHTTPGetters.RiotURLSender;
 
@@ -19,16 +18,15 @@ public class MiddleManClass {
     private final DatabaseAccessor databaseAccessor = new DatabaseAccessor();
     private final DatabaseSender databaseSender = new DatabaseSender();
     private final RiotURLSender riotURLSender = new RiotURLSender();
-    private final JsonToDTO jsonToDTO = new JsonToDTO();
 
-    public void getAndStoreBasicRankedAndUniversityInfo(String username, String universityName) throws Exception {
+    public void getAndStoreBasicRankedAndUniversityInfo(String newSummonerName, String universityName) throws Exception {
         try {
             // All the stuff for the summoner_basic DTO
-            SummonerBasicDTO summonerBasicDTO = riotURLSender.getSummonerBasicInfoByUsername(username);
-            databaseSender.insertSummonerBasicInfo(summonerBasicDTO);
+            SummonerBasicDTO summonerBasicDTO = riotURLSender.getSummonerBasicInfoByUsername(newSummonerName);
+            databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
 
             //All the stuff for the ranked_information DTO
-            long summonerID = summonerBasicDTO.getId();
+            long summonerID = summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId();;
             databaseSender.insertRankedIdAlone(summonerID);
 
             //All the stuff for the university_info DTO
@@ -43,7 +41,7 @@ public class MiddleManClass {
 
     public boolean checkSummonerNameStart(String username) throws SQLException, ClassNotFoundException {
         SummonerBasicDTO summonerBasicDTO = databaseAccessor.returnSummonerDTOFromDatabaseUsingName(username);
-        if(summonerBasicDTO.getName() == ""){
+        if(summonerBasicDTO.getSingleSummonerBasicDTO().getName() == ""){
             return false;
         }
         else return true;
@@ -51,7 +49,7 @@ public class MiddleManClass {
 
     public void checkAndInsertRankingInfo(Long summonerID) {
         try{
-            SummonerRankedInfoDTO summonerRankedInfoDTO = databaseAccessor.checkSummonerRankingExistsForGivenId(summonerID);
+            SummonerRankedInfoDTO summonerRankedInfoDTO = databaseAccessor.getSummonerRankedInfoForGivenId(summonerID);
             if(summonerRankedInfoDTO.getID() == null){
                 databaseSender.insertRankedIdAlone(summonerID);
             }

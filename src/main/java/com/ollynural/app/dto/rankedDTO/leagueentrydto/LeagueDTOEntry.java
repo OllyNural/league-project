@@ -1,30 +1,53 @@
-package com.ollynural.app.dto.leagueentrydto;
+package com.ollynural.app.dto.rankedDTO.leagueentrydto;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Created by Admin on 15/11/2015.
+ * Represents the LeagueDTOEntry DTO
  */
 public class LeagueDTOEntry {
 
-    private String divison;
+    private String division;
+
     private boolean isFreshBlood;
     private boolean isHotStreak;
     private boolean isInactive;
     private boolean isVeteran;
+
     private int leaguePoints;
-    private int losses;
-    private MiniSeriesDTOEntry[] miniSeriesDTOEntries;
+
+    private MiniSeriesDTOEntry miniSeries;
     private String playerOrTeamId;
     private String playerOrTeamName;
     private int wins;
+    private int losses;
 
-    public String getDivison() {
-        return divison;
+    @Override
+    public String toString() {
+        return "LeagueDTOEntry{" +
+                "division='" + division + '\'' +
+                ", isFreshBlood=" + isFreshBlood +
+                ", isHotStreak=" + isHotStreak +
+                ", isInactive=" + isInactive +
+                ", isVeteran=" + isVeteran +
+                ", leaguePoints=" + leaguePoints +
+                ", losses=" + losses +
+                ", miniSeries=" + miniSeries +
+                ", playerOrTeamId='" + playerOrTeamId + '\'' +
+                ", playerOrTeamName='" + playerOrTeamName + '\'' +
+                ", wins=" + wins +
+                '}';
     }
 
-    public void setDivison(String divison) {
-        this.divison = divison;
+    public String getDivision() {
+        return division;
     }
 
+    public void setDivision(String division) {
+        this.division = division;
+    }
+
+    @JsonProperty("isFreshBlood")
     public boolean isFreshBlood() {
         return isFreshBlood;
     }
@@ -33,6 +56,7 @@ public class LeagueDTOEntry {
         this.isFreshBlood = isFreshBlood;
     }
 
+    @JsonProperty("isHotStreak")
     public boolean isHotStreak() {
         return isHotStreak;
     }
@@ -41,6 +65,7 @@ public class LeagueDTOEntry {
         this.isHotStreak = isHotStreak;
     }
 
+    @JsonProperty("isInactive")
     public boolean isInactive() {
         return isInactive;
     }
@@ -49,6 +74,7 @@ public class LeagueDTOEntry {
         this.isInactive = isInactive;
     }
 
+    @JsonProperty("isVeteran")
     public boolean isVeteran() {
         return isVeteran;
     }
@@ -73,12 +99,12 @@ public class LeagueDTOEntry {
         this.losses = losses;
     }
 
-    public MiniSeriesDTOEntry[] getMiniSeriesDTOEntries() {
-        return miniSeriesDTOEntries;
+    public MiniSeriesDTOEntry getMiniSeries() {
+        return miniSeries;
     }
 
-    public void setMiniSeriesDTOEntries(MiniSeriesDTOEntry[] miniSeriesDTOEntries) {
-        this.miniSeriesDTOEntries = miniSeriesDTOEntries;
+    public void setMiniSeries(MiniSeriesDTOEntry miniSeries) {
+        this.miniSeries = miniSeries;
     }
 
     public String getPlayerOrTeamId() {
