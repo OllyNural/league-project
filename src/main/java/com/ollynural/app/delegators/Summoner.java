@@ -1,8 +1,8 @@
 package com.ollynural.app.delegators;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ollynural.app.dto.total.SingleSummonerPlayerDTO;
 import com.ollynural.app.main.dao.BasicDAO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.log4j.Logger;
 

@@ -198,24 +198,25 @@ public class DatabaseAccessor {
     public UniversitySummonerDTO getAllUniversityRankingsForGivenCode(String universityCode) throws SQLException {
         int count = 0;
         loadProperties();
-        logger.info("Returning University DTO from given university name");
+        logger.info(String.format("Returning University DTO from given university name: [%s]", universityCode));
         String query = "SELECT * FROM " + TABLE_UNIVERSITY_INFO + " WHERE university_code = ?";
         Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
 
         PreparedStatement stmt = conn.prepareStatement(query);
         stmt.setString(1, universityCode);
         ResultSet rs = stmt.executeQuery();
-        SummonerUniversityDTO summonerUniversityDTO = new SummonerUniversityDTO();
         ArrayList<SummonerUniversityDTO> summonerUniversityDTOArray = new ArrayList<SummonerUniversityDTO>();
         UniversitySummonerDTO universitySummonerDTO = new UniversitySummonerDTO();
         while (rs.next()) {
             // Get DTO from database
+            SummonerUniversityDTO summonerUniversityDTO = new SummonerUniversityDTO();
             summonerUniversityDTO.setUniversityName(rs.getString("university_code"));
             summonerUniversityDTO.setID(rs.getLong("summonerId"));
             summonerUniversityDTO.setSummonerName(rs.getString("summoner_name"));
 
             //Add all to array
             summonerUniversityDTOArray.add(summonerUniversityDTO);
+            logger.info("ARRAY" + summonerUniversityDTOArray);
             count++;
         }
         logger.info(String.format("[%s] summoners were returned from the database matching university code [%s]", count, universityCode));

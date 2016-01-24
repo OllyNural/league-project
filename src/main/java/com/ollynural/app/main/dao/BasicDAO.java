@@ -77,7 +77,7 @@ public class BasicDAO {
 
         // Send get request to get basic information from the name and assign to main DTO
         // We do this to get the most recent basic info to check for any name changes - Will make more efficient in the future.
-        summonerBasicDTO = riotURLSender.getSummonerBasicInfoByUsername(newSummonerName);
+
 
         singleSummonerPlayerDTO.setSummonerBasicDTO(summonerBasicDTO);
         logger.info("SummonerBasicDTO is: " + summonerBasicDTO.getNonMappedAttributes());
@@ -156,16 +156,47 @@ public class BasicDAO {
 
     public void addUniversityRankingWithSummonerNameAndUniversityCode(String summonerName, String universityCode) throws SQLException {
         logger.info(String.format("Adding university rankings for [%s] with university code of [%s]", summonerName, universityCode));
-        SummonerBasicDTO summonerBasicDTO;
         String newSummonerName = ValidationOfUsername.validateUsername(summonerName);
-        // Delete any occurrence of the summoner name in the database
-        databaseSender.deleteUniversityInfoForGivenName(newSummonerName);
+        SummonerBasicDTO summonerBasicDTO;
         try {
             summonerBasicDTO = riotURLSender.getSummonerBasicInfoByUsername(newSummonerName);
         } catch ( RuntimeException e ){
             throw new RuntimeException();
         }
+        logger.info("SummonerBasicDTO is: " + summonerBasicDTO.getNonMappedAttributes());
+
+        // Assign summonerId to the ID returned
         Long basicId = summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId();
+        logger.info("basicId: " + basicId);
+
+        // Get the one from the database
+        SummonerBasicDTO summonerBasicDTOOld = databaseAccessor.returnSummonerBasicDTOFromDatabaseUsingId(basicId);
+
+        // Checking if the summonerName from the call is different to the one in the database
+        // This is a problem with the unique key constraint as when you change username, the ID remains the same
+        if (summonerBasicDTOOld.getNonMappedAttributes() != null) {
+            logger.info(summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId());
+
+            Object myKey = summonerBasicDTOOld.getNonMappedAttributes().keySet().toArray()[0];
+            Long oldSummonerName = summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId();
+            logger.info(oldSummonerName);
+
+            if (summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId().equals(summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId())) {
+                logger.info("Names were not the same from database and Riot call");
+                // This means the username has changed since we last stored it in the database
+                // We need to delete data from the basic table with the ID and then re-insert it with the new data
+                databaseSender.deleteSummonerBasicInfoForGivenId(basicId);
+                databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
+            } else {
+                // Enter information into database
+                databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
+            }
+        } else {
+            databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
+        }
+
+        // Delete any occurrence of the summoner name in the database
+        databaseSender.deleteUniversityInfoForGivenName(newSummonerName);
         databaseSender.addSummonerNameAndUniversityCode(basicId, summonerName, universityCode);
 
     }

@@ -59,7 +59,7 @@ public class DatabaseSender {
         }
     }
 
-    public void insertSummonerBasicInfo(SummonerBasicDTO summonerBasicDTO, String newSummonerName) throws IOException, SQLException {
+    public void insertSummonerBasicInfo(SummonerBasicDTO summonerBasicDTO, String newSummonerName) throws SQLException {
 
         logger.info("Returning Summoner DTO from database using Summoner Name");
         PreparedStatement stmt = null;
