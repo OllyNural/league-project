@@ -1,5 +1,7 @@
 package com.ollynural.app.dto.total;
 
+import com.ollynural.app.dto.SummonerUniversityDTO;
+
 import java.util.ArrayList;
 
 /**
@@ -10,18 +12,18 @@ public class UniversitySummonerDTO {
     @Override
     public String toString() {
         return "UniversitySummonerDTO{" +
-                "singleSummonerPlayerDTOs=" + singleSummonerPlayerDTOs +
+                "singleSummonerPlayerDTOs=" + summonerUniversityDTO +
                 '}';
     }
 
-    private ArrayList<SingleSummonerPlayerDTO> singleSummonerPlayerDTOs;
+    private ArrayList<SummonerUniversityDTO> summonerUniversityDTO;
 
-    public ArrayList<SingleSummonerPlayerDTO> getSingleSummonerPlayerDTOs() {
-        return singleSummonerPlayerDTOs;
+    public ArrayList<SummonerUniversityDTO> getSummonerUniversityDTOs() {
+        return summonerUniversityDTO;
     }
 
-    public void setSingleSummonerPlayerDTOs(ArrayList<SingleSummonerPlayerDTO> singleSummonerPlayerDTOs) {
-        this.singleSummonerPlayerDTOs = singleSummonerPlayerDTOs;
+    public void setSingleSummonerPlayerDTOs(ArrayList<SummonerUniversityDTO> summonerUniversityDTO) {
+        this.summonerUniversityDTO = summonerUniversityDTO;
     }
 
 }

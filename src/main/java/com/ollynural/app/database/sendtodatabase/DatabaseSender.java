@@ -40,35 +40,35 @@ public class DatabaseSender {
 
     final static Logger logger = Logger.getLogger(DatabaseSender.class);
 
+    private void loadProperties() {
+        String filename = "config.properties";
+        input = getClass().getClassLoader().getResourceAsStream(filename);
+        if (input == null) {
+            System.out.println("Sorry, unable to find " + filename);
+        }
+        try {
+            prop.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL Driver?!?");
+            e.printStackTrace();
+        }
+    }
+
     public void insertSummonerBasicInfo(SummonerBasicDTO summonerBasicDTO, String newSummonerName) throws IOException, SQLException {
 
         logger.info("Returning Summoner DTO from database using Summoner Name");
         PreparedStatement stmt = null;
         try {
-
-            String filename = "config.properties";
-            input = getClass().getClassLoader().getResourceAsStream(filename);
-            if (input == null) {
-                System.out.println("Sorry, unable to find " + filename);
-            }
-
-            prop.load(input);
-            String URL = prop.getProperty("URL");
-            String USER = prop.getProperty("USER");
-            String PASS = prop.getProperty("PASS");
-            String CLASS = prop.getProperty("CLASS");
-            //String TABLE_BASIC_SUMMONER_INFO = prop.getProperty("TABLE_BASIC_SUMMONER_INFO");
-
+            loadProperties();
             stmt = null;
             String query = "INSERT INTO " + TABLE_BASIC_INFO + " (summonerID, summoner_name, summoner_icon, revision_date, summoner_level)" +
                     "VALUES ( ? , ? , ? , ? , ? );";
             try {
-                try {
-                    Class.forName("com.mysql.jdbc.Driver");
-                } catch (ClassNotFoundException e) {
-                    System.out.println("Where is your MySQL Driver?!?");
-                    e.printStackTrace();
-                }
                 Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
                 stmt = conn.prepareStatement(query);
 
@@ -106,29 +106,13 @@ public class DatabaseSender {
 
         Map<String, List<SummonerRankedInfoDTOEntry>> summonerRankedInfoDTOEntry = summonerRankedInfoDTO.getIntegerSummonerRankedInfoDTOEntryMap();
 
-        String filename = "config.properties";
-        input = getClass().getClassLoader().getResourceAsStream(filename);
-        if (input == null) {
-            System.out.println("Sorry, unable to find " + filename);
-        }
-
-        String URL = prop.getProperty("URL");
-        String USER = prop.getProperty("USER");
-        String PASS = prop.getProperty("PASS");
-        String CLASS = prop.getProperty("CLASS");
-        //String TABLE_RANKED_INFO = prop.getProperty("TABLE_RANKED_INFO");
+        loadProperties();
 
         // Prepares the SQL Statement
         PreparedStatement stmt = null;
         String query = "INSERT INTO " + TABLE_RANKED_INFO + " (summonerID, ranked_information_for_summoner)" +
                 "VALUES ( ? , ? );";
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Where is your MySQL Driver?!?");
-            e.printStackTrace();
-        }
         try {
             Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
             stmt = conn.prepareStatement(query);
@@ -153,31 +137,12 @@ public class DatabaseSender {
     }
 
     public void insertRankedIdAlone(long summonerID) throws SQLException {
-        try {
-            // Gets the properties from the properties file
-            input = new FileInputStream("/Project/org/ollynural/project/resources/config.properties");
-            prop.load(input);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String URL = prop.getProperty("URL");
-        String USER = prop.getProperty("USER");
-        String PASS = prop.getProperty("PASS");
-        String CLASS = prop.getProperty("CLASS");
-        //String TABLE_RANKED_INFO = prop.getProperty("TABLE_RANKED_INFO");
 
+        loadProperties();
         PreparedStatement stmt = null;
         String query = "INSERT INTO " + TABLE_RANKED_INFO + " (summonerID)" +
                 "VALUES ( ? );";
 
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            System.out.println("Where is your MySQL Driver?!?");
-            e.printStackTrace();
-        }
         try {
             Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
             stmt = conn.prepareStatement(query);
@@ -197,72 +162,15 @@ public class DatabaseSender {
         }
     }
 
-    public void insertUniversityIDAndName(Long summonerID, String universityName) throws IOException, SQLException {
-        // Gets properties from properties file
-        input = new FileInputStream("/Project/org/ollynural/project/resources/config.properties");
-        prop.load(input);///
-        String URL = prop.getProperty("URL");
-        String USER = prop.getProperty("USER");
-        String PASS = prop.getProperty("PASS");
-        String CLASS = prop.getProperty("CLASS");
-        String TABLE_UNIVERSITY_INFO = prop.getProperty("TABLE_UNIVERSITY_INFO");
-
-        PreparedStatement stmt = null;
-        String query = "INSERT INTO " + TABLE_UNIVERSITY_INFO + " (summonerID, university_code)" +
-                "VALUES ( ? , ? );";
-        try {
-            Class.forName(CLASS);
-        } catch (ClassNotFoundException e) {
-            System.out.println("Where is your MySQL Driver?!?");
-            e.printStackTrace();
-        }
-        try {
-            Connection conn = DriverManager.getConnection(URL, USER, PASS);
-            stmt = conn.prepareStatement(query);
-
-            // Set the variables from the DTO into the query
-            stmt.setLong(1, summonerID);
-            stmt.setString(1, universityName);
-
-            stmt.executeUpdate();
-
-            System.out.println("Summoner ID and University  table was stored!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
-        }
-    }
-
     public void deleteSummonerBasicInfoForGivenId(Long basicId) {
         logger.info("Deleting summonerBasicInfo from database using: " + basicId);
         PreparedStatement stmt = null;
         try {
-
-            String filename = "config.properties";
-            input = getClass().getClassLoader().getResourceAsStream(filename);
-            if (input == null) {
-                System.out.println("Sorry, unable to find " + filename);
-            }
-
-            prop.load(input);
-            String URL = prop.getProperty("URL");
-            String USER = prop.getProperty("USER");
-            String PASS = prop.getProperty("PASS");
-            String CLASS = prop.getProperty("CLASS");
-            //String TABLE_BASIC_SUMMONER_INFO = prop.getProperty("TABLE_BASIC_SUMMONER_INFO");
+            loadProperties();
 
             stmt = null;
             String query = "DELETE FROM " + TABLE_BASIC_INFO + " WHERE summonerID = ?";
             try {
-                try {
-                    Class.forName("com.mysql.jdbc.Driver");
-                } catch (ClassNotFoundException e) {
-                    System.out.println("Where is your MySQL Driver?!?");
-                    e.printStackTrace();
-                }
                 Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
                 stmt = conn.prepareStatement(query);
 
@@ -282,4 +190,40 @@ public class DatabaseSender {
             e.printStackTrace();
         }
     }
+    public void addSummonerNameAndUniversityCode(Long basicId, String summonerName, String universityCode) throws SQLException {
+        logger.info("Adding summoner name: [" + summonerName + "/" + basicId + "] and university: [" + universityCode + "]");
+        loadProperties();
+        PreparedStatement stmt;
+        String query = "INSERT INTO " + TABLE_UNIVERISTY_INFO + " VALUES ( ? , ? , ? )";
+        Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
+        stmt = conn.prepareStatement(query);
+
+        stmt.setLong(1, basicId);
+        stmt.setString(2, universityCode);
+        stmt.setString(3, summonerName);
+        stmt.executeUpdate();
+        logger.info("Summoner name and university were added to the database");
+
+        stmt.close();
+    }
+
+    public void deleteUniversityInfoForGivenName(String summonerName) throws SQLException {
+        logger.info("Deleting university by summoner name: [" + summonerName + "]");
+        loadProperties();
+        PreparedStatement stmt;
+        String query = "DELETE FROM " + TABLE_UNIVERISTY_INFO + "  WHERE summoner_name = ?";
+        Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
+        stmt = conn.prepareStatement(query);
+
+        stmt.setString(1, summonerName);
+        stmt.executeUpdate();
+        logger.info("Summoner name and info were deleted from the university ranking table");
+
+        stmt.close();
+    }
+
+    public void insertUniversityIDAndName(long summonerID, String universityName) {
+
+    }
 }
+

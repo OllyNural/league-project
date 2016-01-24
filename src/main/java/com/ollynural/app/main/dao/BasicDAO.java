@@ -8,6 +8,7 @@ import com.ollynural.app.dto.total.SingleSummonerPlayerDTO;
 import com.ollynural.app.dto.summonerBasicDTO.SummonerBasicDTO;
 import com.ollynural.app.dto.rankedDTO.SummonerRankedInfoDTO;
 import com.ollynural.app.dto.SummonerUniversityDTO;
+import com.ollynural.app.dto.total.UniversitySummonerDTO;
 import com.ollynural.app.main.JsonHTTPGetters.RiotURLSender;
 import org.apache.log4j.Logger;
 
@@ -153,7 +154,25 @@ public class BasicDAO {
 
     }
 
-    public SummonerUniversityDTO getUniversityRankingsByUniversityCode(String universityCode) {
-        // Do a search on database returning a list of all summoner id
+    public void addUniversityRankingWithSummonerNameAndUniversityCode(String summonerName, String universityCode) throws SQLException {
+        logger.info(String.format("Adding university rankings for [%s] with university code of [%s]", summonerName, universityCode));
+        SummonerBasicDTO summonerBasicDTO;
+        String newSummonerName = ValidationOfUsername.validateUsername(summonerName);
+        // Delete any occurrence of the summoner name in the database
+        databaseSender.deleteUniversityInfoForGivenName(newSummonerName);
+        try {
+            summonerBasicDTO = riotURLSender.getSummonerBasicInfoByUsername(newSummonerName);
+        } catch ( RuntimeException e ){
+            throw new RuntimeException();
+        }
+        Long basicId = summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId();
+        databaseSender.addSummonerNameAndUniversityCode(basicId, summonerName, universityCode);
+
     }
+
+    public UniversitySummonerDTO getUniversityRankingsByUniversityCode(String universityCode) throws SQLException {
+        logger.info(String.format("Getting university rankings by code [%s]", universityCode));
+        return databaseAccessor.getAllUniversityRankingsForGivenCode(universityCode);
+    }
+
 }

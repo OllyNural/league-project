@@ -5,14 +5,32 @@ package com.ollynural.app.dto;
  */
 public class SummonerUniversityDTO {
 
+    @Override
+    public String toString() {
+        return "SummonerUniversityDTO{" +
+                "summonerID=" + summonerID +
+                ", summonerName='" + summonerName + '\'' +
+                ", universityName='" + universityName + '\'' +
+                '}';
+    }
+
     private Long summonerID;
+    private String summonerName;
     private String universityName;
+
+    public String getSummonerName() {
+        return summonerName;
+    }
+
+    public void setSummonerName(String summonerName) {
+        this.summonerName = summonerName;
+    }
 
     public Long getID() {
         return summonerID;
     }
 
-    public void getID(Long summonerID) {
+    public void setID(Long summonerID) {
         this.summonerID = summonerID;
     }
 

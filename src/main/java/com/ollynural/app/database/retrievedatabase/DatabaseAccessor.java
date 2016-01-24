@@ -6,13 +6,13 @@ import com.ollynural.app.dto.summonerBasicDTO.SingleSummonerBasicDTO;
 import com.ollynural.app.dto.summonerBasicDTO.SummonerBasicDTO;
 import com.ollynural.app.dto.rankedDTO.SummonerRankedInfoDTO;
 import com.ollynural.app.dto.SummonerUniversityDTO;
+import com.ollynural.app.dto.total.UniversitySummonerDTO;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 /**
  * Created by Admin on 14/11/2015.
@@ -38,6 +38,25 @@ public class DatabaseAccessor {
     private Properties prop = new Properties();
     private InputStream input = null;
 
+    private void loadProperties() {
+        String filename = "config.properties";
+        input = getClass().getClassLoader().getResourceAsStream(filename);
+        if (input == null) {
+            System.out.println("Sorry, unable to find " + filename);
+        }
+        try {
+            prop.load(input);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.out.println("Where is your MySQL Driver?!?");
+            e.printStackTrace();
+        }
+    }
+
     public SummonerBasicDTO returnSummonerDTOFromDatabaseUsingName(String newUsername) {
 
         SummonerBasicDTO summonerBasicDTO = new SummonerBasicDTO();
@@ -47,25 +66,7 @@ public class DatabaseAccessor {
         logger.info("Returning Summoner DTO from database using Summoner Name");
         PreparedStatement stmt = null;
         try {
-
-            String filename = "config.properties";
-            input = getClass().getClassLoader().getResourceAsStream(filename);
-            if (input == null) {
-                System.out.println("Sorry, unable to find " + filename);
-            }
-
-            prop.load(input);
-
-            String URL = prop.getProperty("URL");
-            String USER = prop.getProperty("USER");
-            String PASS = prop.getProperty("PASS");
-            String CLASS = prop.getProperty("CLASS");
-            //String TABLE_UNIVERSITY_INFO = prop.getProperty("DATABASE_SCHEMA_NAME") + "." + prop.getProperty("TABLE_BASIC_SUMMONER_INFO");
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                logger.error("Error getting database driver", e);
-            }
+            loadProperties();
 
             String query = "SELECT * FROM " + TABLE_BASIC_INFO + " WHERE summoner_name = ? ";
 
@@ -111,26 +112,7 @@ public class DatabaseAccessor {
         logger.info("Returning Summoner DTO from database using Summoner ID");
         PreparedStatement stmt = null;
         try {
-
-            String filename = "config.properties";
-            input = getClass().getClassLoader().getResourceAsStream(filename);
-            if (input == null) {
-                System.out.println("Sorry, unable to find " + filename);
-            }
-
-            prop.load(input);
-
-            String URL = prop.getProperty("URL");
-            String USER = prop.getProperty("USER");
-            String PASS = prop.getProperty("PASS");
-            String CLASS = prop.getProperty("CLASS");
-            //String TABLE_UNIVERSITY_INFO = prop.getProperty("DATABASE_SCHEMA_NAME") + "." + prop.getProperty("TABLE_BASIC_SUMMONER_INFO");
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                logger.error("Error getting database driver", e);
-            }
-
+            loadProperties();
             String query = "SELECT * FROM " + TABLE_BASIC_INFO + " WHERE summonerID = ? ";
 
             Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
@@ -170,24 +152,7 @@ public class DatabaseAccessor {
         // Database Setup
         logger.info("Checking Summoner Ranking Exists for given Summoner ID");
         try {
-            String filename = "config.properties";
-            input = getClass().getClassLoader().getResourceAsStream(filename);
-            if (input == null) {
-                System.out.println("Sorry, unable to find " + filename);
-            }
-            prop.load(input);
-            String URL = prop.getProperty("URL");
-            String USER = prop.getProperty("USER");
-            String PASS = prop.getProperty("PASS");
-            String CLASS = prop.getProperty("CLASS");
-            //String TABLE_RANKED_INFO = prop.getProperty("TABLE_RANKED_INFO");
-
-            try {
-                Class.forName("com.mysql.jdbc.Driver");
-            } catch (ClassNotFoundException e) {
-                logger.error("Error getting database driver", e);
-            }
-
+            loadProperties();
             PreparedStatement stmt;
             String query = "SELECT * FROM " + TABLE_RANKED_INFO + " WHERE summonerID = ? ";
 
@@ -211,20 +176,7 @@ public class DatabaseAccessor {
         // Database Setup
         logger.info("Returning University DTO from given Summoner ID");
         try {
-            String filename = "config.properties";
-            input = getClass().getClassLoader().getResourceAsStream(filename);
-            if (input == null) {
-                System.out.println("Sorry, unable to find " + filename);
-            }
-            prop.load(input);
-            String URL = prop.getProperty("URL");
-            String USER = prop.getProperty("USER");
-            String PASS = prop.getProperty("PASS");
-            String CLASS = prop.getProperty("CLASS");
-            //String TABLE_UNIVERSITY_INFO = prop.getProperty("TABLE_UNIVERSITY_INFO");
-
-            Class.forName("com.mysql.jdbc.Driver");
-
+            loadProperties();
             PreparedStatement stmt;
             String query = "SELECT * FROM " + TABLE_UNIVERSITY_INFO + " WHERE summonerID = ? ";
 
@@ -234,12 +186,41 @@ public class DatabaseAccessor {
             stmt.setLong(1, summonerID);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                summonerUniversityDTO.getID(rs.getLong("summonerID"));
+                summonerUniversityDTO.setID(rs.getLong("summonerID"));
                 summonerUniversityDTO.setUniversityName(rs.getString("university_code"));
             }
         } catch(Exception e){
             e.printStackTrace();
         }
         return summonerUniversityDTO;
+    }
+
+    public UniversitySummonerDTO getAllUniversityRankingsForGivenCode(String universityCode) throws SQLException {
+        int count = 0;
+        loadProperties();
+        logger.info("Returning University DTO from given university name");
+        String query = "SELECT * FROM " + TABLE_UNIVERSITY_INFO + " WHERE university_code = ?";
+        Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
+
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, universityCode);
+        ResultSet rs = stmt.executeQuery();
+        SummonerUniversityDTO summonerUniversityDTO = new SummonerUniversityDTO();
+        ArrayList<SummonerUniversityDTO> summonerUniversityDTOArray = new ArrayList<SummonerUniversityDTO>();
+        UniversitySummonerDTO universitySummonerDTO = new UniversitySummonerDTO();
+        while (rs.next()) {
+            // Get DTO from database
+            summonerUniversityDTO.setUniversityName(rs.getString("university_code"));
+            summonerUniversityDTO.setID(rs.getLong("summonerId"));
+            summonerUniversityDTO.setSummonerName(rs.getString("summoner_name"));
+
+            //Add all to array
+            summonerUniversityDTOArray.add(summonerUniversityDTO);
+            count++;
+        }
+        logger.info(String.format("[%s] summoners were returned from the database matching university code [%s]", count, universityCode));
+        universitySummonerDTO.setSingleSummonerPlayerDTOs(summonerUniversityDTOArray);
+        logger.info(String.format("UniversityArrayDTO is [%s]", universitySummonerDTO));
+        return universitySummonerDTO;
     }
 }
