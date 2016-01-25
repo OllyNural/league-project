@@ -2,6 +2,7 @@ package com.ollynural.app.main.JsonHTTPGetters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ollynural.app.converters.JsonToDTO;
+import com.ollynural.app.converters.validation.ValidationOfUsername;
 import com.ollynural.app.dto.summonerBasicDTO.SummonerBasicDTO;
 import com.ollynural.app.dto.rankedDTO.SummonerRankedInfoDTO;
 import org.apache.log4j.Logger;
@@ -60,6 +61,12 @@ public class RiotURLSender {
         SummonerBasicDTO summonerBasicDTO = new SummonerBasicDTO();
         try {
             summonerBasicDTO = mapper.readValue(jsonString, SummonerBasicDTO.class);
+            // Formats the name
+            Object myKey = summonerBasicDTO.getNonMappedAttributes().keySet().toArray()[0];
+            logger.info(summonerBasicDTO.getNonMappedAttributes().get(myKey).getName());
+            String formattedName = ValidationOfUsername.validateUsername(summonerBasicDTO.getNonMappedAttributes().get(myKey).getName());
+            summonerBasicDTO.getNonMappedAttributes().get(myKey).setName(formattedName);
+            logger.info(summonerBasicDTO.getNonMappedAttributes().get(myKey).getName());
         } catch (IOException e) {
             e.printStackTrace();
         }

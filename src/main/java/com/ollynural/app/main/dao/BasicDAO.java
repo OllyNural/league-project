@@ -104,9 +104,6 @@ public class BasicDAO {
                 // We need to delete data from the basic table with the ID and then re-insert it with the new data
                 databaseSender.deleteSummonerBasicInfoForGivenId(basicId);
                 databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
-            } else {
-                // Enter information into database
-                databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
             }
         } else {
             databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
@@ -181,14 +178,11 @@ public class BasicDAO {
             Long oldSummonerName = summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId();
             logger.info(oldSummonerName);
 
-            if (summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId().equals(summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId())) {
+            if (!summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId().equals(summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId())) {
                 logger.info("Names were not the same from database and Riot call");
                 // This means the username has changed since we last stored it in the database
                 // We need to delete data from the basic table with the ID and then re-insert it with the new data
                 databaseSender.deleteSummonerBasicInfoForGivenId(basicId);
-                databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
-            } else {
-                // Enter information into database
                 databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
             }
         } else {

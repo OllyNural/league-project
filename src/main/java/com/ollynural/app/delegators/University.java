@@ -49,13 +49,13 @@ public class University {
             logger.info("Adding [" + summonerName + "] to the university database");
             basicDAO.addUniversityRankingWithSummonerNameAndUniversityCode(summonerName, universityCode);
         } catch (RuntimeException e) {
-            e.printStackTrace();
+            logger.info(String.format("Summoner name [%s] does not exist in EUW", summonerName));
             return Response.status(500).entity("RIOT URL Failure").build();
         } catch (SQLException e) {
             e.printStackTrace();
             return Response.status(500).entity("SQL Failure").build();
         }
-        return Response.status(200).entity("not-stuff").build();
+        return Response.status(200).entity("").build();
     }
 
 }
