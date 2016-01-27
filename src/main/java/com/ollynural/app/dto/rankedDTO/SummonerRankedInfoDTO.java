@@ -35,14 +35,6 @@ public class SummonerRankedInfoDTO {
         this.integerSummonerRankedInfoDTOEntryMap = integerSummonerRankedInfoDTOEntryMap;
     }
 
-    public Long getSummonerID() {
-        return summonerID;
-    }
-
-    public void setSummonerID(Long summonerID) {
-        this.summonerID = summonerID;
-    }
-
     public Long getID() {
         return summonerID;
     }

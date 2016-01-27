@@ -1,6 +1,7 @@
 package com.ollynural.app.main.dao;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ollynural.app.converters.validation.ValidationOfUsername;
 import com.ollynural.app.database.retrievedatabase.DatabaseAccessor;
 import com.ollynural.app.database.sendtodatabase.DatabaseSender;
@@ -22,6 +23,8 @@ public class BasicDAO {
     private final DatabaseSender databaseSender = new DatabaseSender();
     private final MiddleManClass middleManClass = new MiddleManClass();
     private final RiotURLSender riotURLSender = new RiotURLSender();
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     final static Logger logger = Logger.getLogger(BasicDAO.class);
 
@@ -157,7 +160,7 @@ public class BasicDAO {
         SummonerBasicDTO summonerBasicDTO;
         try {
             summonerBasicDTO = riotURLSender.getSummonerBasicInfoByUsername(newSummonerName);
-        } catch ( RuntimeException e ){
+        } catch (RuntimeException e) {
             throw new RuntimeException();
         }
         logger.info("SummonerBasicDTO is: " + summonerBasicDTO.getNonMappedAttributes());
@@ -197,7 +200,28 @@ public class BasicDAO {
 
     public UniversitySummonerDTO getUniversityRankingsByUniversityCode(String universityCode) throws SQLException {
         logger.info(String.format("Getting university rankings by code [%s]", universityCode));
-        return databaseAccessor.getAllUniversityRankingsForGivenCode(universityCode);
+        Long summonerId;
+        SummonerRankedInfoDTO summonerRankedInfoDTO;
+        UniversitySummonerDTO universitySummonerDTO = databaseAccessor.getAllUniversityRankingsForGivenCode(universityCode);
+
+        // Sets the ranked information for each of the names the university call returns
+        for (int i = 0; i < universitySummonerDTO.getSummonerUniversityDTOs().size(); i++) {
+            summonerId = universitySummonerDTO.getSummonerUniversityDTOs().get(i).getID();
+            summonerRankedInfoDTO = databaseAccessor.getSummonerRankedInfoForGivenId(summonerId);
+            // Add the check the last update time later
+            // || summonerRankedInfoDTO.getUpdateTime() > 30 minutes)
+            // if (summonerRankedInfoDTO.getUpdateTime() > 30 minutes} {
+            //     databaseSender.deleteRankedInfoForGivenId(summonerId);
+            // }
+            // This order
+            if (summonerRankedInfoDTO.getID() == null || summonerRankedInfoDTO.getID() == 0) {
+                summonerRankedInfoDTO = riotURLSender.getRankedInfoByID(summonerId);
+                universitySummonerDTO.getSummonerUniversityDTOs().get(i).setSummonerRankedInfoDTO(summonerRankedInfoDTO);
+                databaseSender.insertRankedInfo(summonerRankedInfoDTO);
+            }
+            universitySummonerDTO.getSummonerUniversityDTOs().get(i).setSummonerRankedInfoDTO(summonerRankedInfoDTO);
+        }
+        return universitySummonerDTO;
     }
 
 }

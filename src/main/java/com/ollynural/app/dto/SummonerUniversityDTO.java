@@ -1,5 +1,7 @@
 package com.ollynural.app.dto;
 
+import com.ollynural.app.dto.rankedDTO.SummonerRankedInfoDTO;
+
 /**
  * Created by Admin on 22/11/2015.
  */
@@ -17,6 +19,15 @@ public class SummonerUniversityDTO {
     private Long summonerID;
     private String summonerName;
     private String universityName;
+    private SummonerRankedInfoDTO summonerRankedInfoDTO;
+
+    public SummonerRankedInfoDTO getSummonerRankedInfoDTO() {
+        return summonerRankedInfoDTO;
+    }
+
+    public void setSummonerRankedInfoDTO(SummonerRankedInfoDTO summonerRankedInfoDTO) {
+        this.summonerRankedInfoDTO = summonerRankedInfoDTO;
+    }
 
     public String getSummonerName() {
         return summonerName;
