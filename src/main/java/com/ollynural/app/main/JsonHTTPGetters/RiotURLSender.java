@@ -103,8 +103,6 @@ public class RiotURLSender {
             conn.disconnect();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
         if (json == null) {

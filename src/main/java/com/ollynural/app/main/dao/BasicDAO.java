@@ -12,6 +12,7 @@ import com.ollynural.app.dto.SummonerUniversityDTO;
 import com.ollynural.app.dto.total.UniversitySummonerDTO;
 import com.ollynural.app.main.JsonHTTPGetters.RiotURLSender;
 import org.apache.log4j.Logger;
+import org.omg.SendingContext.RunTime;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,43 +28,6 @@ public class BasicDAO {
     private ObjectMapper mapper = new ObjectMapper();
 
     final static Logger logger = Logger.getLogger(BasicDAO.class);
-
-    public int checkAndUpdateSummonerNameAndInformation(String username, String universityName) throws Exception {
-
-        SummonerBasicDTO summonerBasicDTO = databaseAccessor.returnSummonerDTOFromDatabaseUsingName(username);
-        SummonerRankedInfoDTO summonerRankedInfoDTO = databaseAccessor.getSummonerRankedInfoForGivenId(summonerBasicDTO.getSingleSummonerBasicDTO().getId());
-        SummonerUniversityDTO summonerUniversityDTO = databaseAccessor.returnUniversityDTOFromID(summonerBasicDTO.getSingleSummonerBasicDTO().getId());
-
-        Long basicID = summonerBasicDTO.getSingleSummonerBasicDTO().getId();
-        Long rankedID = summonerRankedInfoDTO.getID();
-        Long universityID = summonerUniversityDTO.getID();
-
-        if (basicID != null && rankedID != null && universityID != null) {
-            System.out.println("The IDs already exist in all databases");
-            return 0;
-        }
-
-        if (summonerBasicDTO.getSingleSummonerBasicDTO().getId() == null) {
-            middleManClass.getAndStoreBasicRankedAndUniversityInfo(username, universityName);
-            System.out.println("ID does not exist in database");
-            System.out.println("Inserting ID and information into basic summoner info, ranked info and university info");
-            return 2;
-        } else {
-
-            if (summonerRankedInfoDTO.getID() == null) {
-                middleManClass.checkAndInsertRankingInfo(summonerBasicDTO.getSingleSummonerBasicDTO().getId());
-                System.out.println("Basic info exists in database.");
-                System.out.println("Inserting Ranked info into database");
-            }
-
-            if (summonerUniversityDTO.getID() == null) {
-                middleManClass.checkAndInsertUniversityInfo(summonerBasicDTO.getSingleSummonerBasicDTO().getId(), universityName);
-                System.out.println("Basic info and ranked info exist in database");
-                System.out.println("Inserting university info into database");
-            }
-            return 1;
-        }
-    }
 
     public SingleSummonerPlayerDTO getOrRetrieveBasicAndRankedSummonerInformation(String summonerName) throws IOException, ParseException, SQLException {
 
@@ -168,20 +132,15 @@ public class BasicDAO {
         // Assign summonerId to the ID returned
         Long basicId = summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId();
         logger.info("basicId: " + basicId);
-
         // Get the one from the database
         SummonerBasicDTO summonerBasicDTOOld = databaseAccessor.returnSummonerBasicDTOFromDatabaseUsingId(basicId);
 
         // Checking if the summonerName from the call is different to the one in the database
         // This is a problem with the unique key constraint as when you change username, the ID remains the same
         if (summonerBasicDTOOld.getNonMappedAttributes() != null) {
-            logger.info(summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId());
-
             Object myKey = summonerBasicDTOOld.getNonMappedAttributes().keySet().toArray()[0];
             Long oldSummonerName = summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId();
-            logger.info(oldSummonerName);
-
-            if (!summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId().equals(summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId())) {
+            if (!summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId().equals(summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId()) && summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId() != null) {
                 logger.info("Names were not the same from database and Riot call");
                 // This means the username has changed since we last stored it in the database
                 // We need to delete data from the basic table with the ID and then re-insert it with the new data
@@ -192,6 +151,10 @@ public class BasicDAO {
             databaseSender.insertSummonerBasicInfo(summonerBasicDTO, newSummonerName);
         }
 
+        // Insert ranked information
+        SummonerRankedInfoDTO summonerRankedInfoDTO = riotURLSender.getRankedInfoByID(basicId);
+        databaseSender.insertRankedInfo(summonerRankedInfoDTO);
+
         // Delete any occurrence of the summoner name in the database
         databaseSender.deleteUniversityInfoForGivenName(newSummonerName);
         databaseSender.addSummonerNameAndUniversityCode(basicId, summonerName, universityCode);
@@ -200,26 +163,21 @@ public class BasicDAO {
 
     public UniversitySummonerDTO getUniversityRankingsByUniversityCode(String universityCode) throws SQLException {
         logger.info(String.format("Getting university rankings by code [%s]", universityCode));
-        Long summonerId;
-        SummonerRankedInfoDTO summonerRankedInfoDTO;
         UniversitySummonerDTO universitySummonerDTO = databaseAccessor.getAllUniversityRankingsForGivenCode(universityCode);
 
-        // Sets the ranked information for each of the names the university call returns
+        // Checks that the ranked information returns is existent, and if so whether it is in date
         for (int i = 0; i < universitySummonerDTO.getSummonerUniversityDTOs().size(); i++) {
-            summonerId = universitySummonerDTO.getSummonerUniversityDTOs().get(i).getID();
-            summonerRankedInfoDTO = databaseAccessor.getSummonerRankedInfoForGivenId(summonerId);
-            // Add the check the last update time later
-            // || summonerRankedInfoDTO.getUpdateTime() > 30 minutes)
-            // if (summonerRankedInfoDTO.getUpdateTime() > 30 minutes} {
-            //     databaseSender.deleteRankedInfoForGivenId(summonerId);
-            // }
-            // This order
-            if (summonerRankedInfoDTO.getID() == null || summonerRankedInfoDTO.getID() == 0) {
-                summonerRankedInfoDTO = riotURLSender.getRankedInfoByID(summonerId);
-                universitySummonerDTO.getSummonerUniversityDTOs().get(i).setSummonerRankedInfoDTO(summonerRankedInfoDTO);
-                databaseSender.insertRankedInfo(summonerRankedInfoDTO);
+            Long rankedSummonerId = universitySummonerDTO.getSummonerUniversityDTOs().get(i).getSummonerRankedInfoDTO().getID();
+            Long summonerId = universitySummonerDTO.getSummonerUniversityDTOs().get(i).getID();
+            if (rankedSummonerId == null) {
+                logger.info("Getting ranked information from RIOT");
+                logger.info(riotURLSender.getRankedInfoByID(summonerId));
+                universitySummonerDTO.getSummonerUniversityDTOs().get(i).setSummonerRankedInfoDTO(riotURLSender.getRankedInfoByID(summonerId));
+            } else {
+                logger.info(String.format("Ranked information for [%s] existed but might be an old cache, UPDATING", summonerId));
+                // Here you will check the cache
             }
-            universitySummonerDTO.getSummonerUniversityDTOs().get(i).setSummonerRankedInfoDTO(summonerRankedInfoDTO);
+                logger.info(universitySummonerDTO);
         }
         return universitySummonerDTO;
     }

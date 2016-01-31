@@ -1,6 +1,7 @@
 package com.ollynural.app.database.retrievedatabase;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ollynural.app.converters.JsonToDTO;
 import com.ollynural.app.dto.summonerBasicDTO.SingleSummonerBasicDTO;
 import com.ollynural.app.dto.summonerBasicDTO.SummonerBasicDTO;
@@ -20,6 +21,7 @@ import java.util.Properties;
  */
 public class DatabaseAccessor {
 
+    private ObjectMapper mapper = new ObjectMapper();
 
     //Properties here until i get properties file working properly
     private String TABLE_BASIC_INFO = "league_database_schema.basic_summoner_info";
@@ -29,7 +31,6 @@ public class DatabaseAccessor {
     private String USERNAME = "admin";
     private String PASSWORD = "admin_pass";
 
-    private SummonerRankedInfoDTO summonerRankedInfoDTO = new SummonerRankedInfoDTO();
     private SummonerUniversityDTO summonerUniversityDTO = new SummonerUniversityDTO();
     private JsonToDTO jsonToDTO = new JsonToDTO();
 
@@ -150,7 +151,8 @@ public class DatabaseAccessor {
 
     public SummonerRankedInfoDTO getSummonerRankedInfoForGivenId(Long summonerID) {
         // Database Setup
-        logger.info("Checking Summoner Ranking Exists for given Summoner ID");
+        logger.info(String.format("Checking Summoner Ranking Exists for given Summoner ID: [%s]", summonerID));
+        SummonerRankedInfoDTO summonerRankedInfoDTO = new SummonerRankedInfoDTO();
         try {
             loadProperties();
             PreparedStatement stmt;
@@ -199,7 +201,10 @@ public class DatabaseAccessor {
         int count = 0;
         loadProperties();
         logger.info(String.format("Returning University DTO from given university name: [%s]", universityCode));
-        String query = "SELECT * FROM " + TABLE_UNIVERSITY_INFO + " WHERE university_code = ?";
+        String query = "SELECT university_info.summonerID, university_info.university_code, university_info.summoner_name, ranked_info.ranked_information_for_summoner FROM " +
+                TABLE_UNIVERSITY_INFO +
+                " INNER JOIN ranked_info ON university_info.summonerID=ranked_info.summonerID" +
+                " WHERE university_info.university_code= ?";
         Connection conn = DriverManager.getConnection(DATABASE_SCHEMA, USERNAME, PASSWORD);
 
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -213,10 +218,10 @@ public class DatabaseAccessor {
             summonerUniversityDTO.setUniversityName(rs.getString("university_code"));
             summonerUniversityDTO.setID(rs.getLong("summonerId"));
             summonerUniversityDTO.setSummonerName(rs.getString("summoner_name"));
+            summonerUniversityDTO.setSummonerRankedInfoDTO(JsonToDTO.convertRankedInformationStringToJson(rs.getString("ranked_information_for_summoner")));
 
             //Add all to array
             summonerUniversityDTOArray.add(summonerUniversityDTO);
-            logger.info("ARRAY" + summonerUniversityDTOArray);
             count++;
         }
         logger.info(String.format("[%s] summoners were returned from the database matching university code [%s]", count, universityCode));

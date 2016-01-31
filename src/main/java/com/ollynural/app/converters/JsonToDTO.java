@@ -22,7 +22,6 @@ public class JsonToDTO {
     final static Logger logger = Logger.getLogger(JsonToDTO.class);
 
     private SummonerBasicDTO summonerBasicDTO = new SummonerBasicDTO();
-    private SummonerRankedInfoDTO summonerRankedInfoDTO = new SummonerRankedInfoDTO();
 
     public SummonerBasicDTO convertBasicInformationStringToJson(String json) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
@@ -42,7 +41,8 @@ public class JsonToDTO {
         return summonerBasicDTO;
     }
 
-    public SummonerRankedInfoDTO convertRankedInformationStringToJson(String json){
+    public static SummonerRankedInfoDTO convertRankedInformationStringToJson(String json){
+        SummonerRankedInfoDTO summonerRankedInfoDTO = new SummonerRankedInfoDTO();
         ObjectMapper mapper = new ObjectMapper();
         TypeFactory factory = mapper.getTypeFactory();
         // type of key of response map
@@ -55,6 +55,7 @@ public class JsonToDTO {
             assert json != null;
             Map<String, List<SummonerRankedInfoDTOEntry>> response = new ObjectMapper().readValue(json, responseType);
             summonerRankedInfoDTO.setIntegerSummonerRankedInfoDTOEntryMap(response);
+            summonerRankedInfoDTO.setID(Long.parseLong(response.keySet().toArray()[0].toString()));
         } catch (IOException e) {
             e.printStackTrace();
         }

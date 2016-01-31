@@ -13,6 +13,7 @@ public class SummonerUniversityDTO {
                 "summonerID=" + summonerID +
                 ", summonerName='" + summonerName + '\'' +
                 ", universityName='" + universityName + '\'' +
+                ", summonerRankingInfoDTO='" + summonerRankedInfoDTO + '\'' +
                 '}';
     }
 

@@ -29,6 +29,7 @@ public class University {
     @Produces(MediaType.APPLICATION_JSON)
     public Response returnSingleSummoner(
             @PathParam("universitycode") String universityCode) throws Exception {
+        logger.info("START PROCESS ---------------------------");
         if(!universityCode.equals("") || universityCode != null) {
             UniversitySummonerDTO universityArrayDTO = basicDAO.getUniversityRankingsByUniversityCode(universityCode);
             String json = mapper.writeValueAsString(universityArrayDTO);
@@ -45,15 +46,16 @@ public class University {
     public Response submitSummonerWithUniversityToDatabase(
             @PathParam("summonerName") String summonerName,
             @PathParam("universityCode") String universityCode) {
+        logger.info("START PROCESS ---------------------------");
         try {
             logger.info("Adding [" + summonerName + "] to the university database");
             basicDAO.addUniversityRankingWithSummonerNameAndUniversityCode(summonerName, universityCode);
         } catch (RuntimeException e) {
             logger.info(String.format("Summoner name [%s] does not exist in EUW", summonerName));
-            return Response.status(500).entity("RIOT URL Failure").build();
+            return Response.status(500).entity("Fail").build();
         } catch (SQLException e) {
             e.printStackTrace();
-            return Response.status(500).entity("SQL Failure").build();
+            return Response.status(500).entity("Fail").build();
         }
         return Response.status(200).entity("").build();
     }
