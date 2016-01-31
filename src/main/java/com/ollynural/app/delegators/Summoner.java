@@ -33,7 +33,6 @@ public class Summoner {
         SingleSummonerPlayerDTO singleSummonerPlayerDTO = new SingleSummonerPlayerDTO();
         try {
             singleSummonerPlayerDTO = dao.getOrRetrieveBasicAndRankedSummonerInformation(summonerName);
-            logger.info("Successfully done stuff");
             singleSummonerPlayerDTO.setUsernameExists(true);
         } catch (RuntimeException e) {
             logger.error("Username doesn't exist");

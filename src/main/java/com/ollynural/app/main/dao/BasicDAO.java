@@ -22,10 +22,7 @@ public class BasicDAO {
 
     private final DatabaseAccessor databaseAccessor = new DatabaseAccessor();
     private final DatabaseSender databaseSender = new DatabaseSender();
-    private final MiddleManClass middleManClass = new MiddleManClass();
     private final RiotURLSender riotURLSender = new RiotURLSender();
-
-    private ObjectMapper mapper = new ObjectMapper();
 
     final static Logger logger = Logger.getLogger(BasicDAO.class);
 
@@ -44,7 +41,7 @@ public class BasicDAO {
 
         // Send get request to get basic information from the name and assign to main DTO
         // We do this to get the most recent basic info to check for any name changes - Will make more efficient in the future.
-
+        summonerBasicDTO = riotURLSender.getSummonerBasicInfoByUsername(newSummonerName);
 
         singleSummonerPlayerDTO.setSummonerBasicDTO(summonerBasicDTO);
         logger.info("SummonerBasicDTO is: " + summonerBasicDTO.getNonMappedAttributes());
@@ -63,10 +60,8 @@ public class BasicDAO {
             logger.info(summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId());
 
             Object myKey = summonerBasicDTOOld.getNonMappedAttributes().keySet().toArray()[0];
-            Long oldSummonerName = summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId();
-            logger.info(oldSummonerName);
 
-            if (summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId().equals(summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId())) {
+            if (!summonerBasicDTO.getNonMappedAttributes().get(newSummonerName).getId().equals(summonerBasicDTOOld.getNonMappedAttributes().get(myKey).getId())) {
                 // This means the username has changed since we last stored it in the database
                 // We need to delete data from the basic table with the ID and then re-insert it with the new data
                 databaseSender.deleteSummonerBasicInfoForGivenId(basicId);
